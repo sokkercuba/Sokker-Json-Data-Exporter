@@ -1,6 +1,6 @@
 {
   "name": "Sokker JSON data exporter",
-  "short_name": "Sokker exporter",
+  "short_name": "Sokker data exporter",
   "icons": {
     "72": "/icons/icon-72x72.png",
     "96": "/icons/icon-96x96.png",
