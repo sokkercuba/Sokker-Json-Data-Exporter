@@ -109,11 +109,15 @@ export function Downloader({
           handleTooltipOpen();
         }, 1500);
       })
-      .catch((err) => {
+      .catch((error) => {
+        const { response, code } = error;
+        const errorCode = response?.status ?? code;
         setIsCopied(true);
-        console.log("🚀 ~ err:", err);
         setCopyStatus("error");
         handleTooltipOpen();
+        handleAlertOpen();
+        setAlertSeverity("error");
+        setResponseText(parseApiErrors(errorCode?.toString() || ""));
       });
   };
 
@@ -132,12 +136,10 @@ export function Downloader({
         const { status, data } = response || null;
 
         if (status === 200 && data && !data?.error) {
-          console.log("🚀 ~ getData success:", response);
           setData(data);
           setSuccess(true);
         }
         if (data?.error) {
-          console.log("🚀 ~ getData fail:", response);
           setSuccess(false);
           handleAlertOpen();
           setAlertSeverity("error");
@@ -147,7 +149,6 @@ export function Downloader({
       .catch((error: AxiosError) => {
         const { response, code } = error;
         const errorCode = response?.status ?? code;
-        console.log("🚀 ~ getUserData error:", error);
         setSuccess(false);
         handleAlertOpen();
         setAlertSeverity("error");
