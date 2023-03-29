@@ -1,0 +1,22 @@
+{
+  "name": "Sokker JSON data exporter",
+  "short_name": "Sokker exporter",
+  "icons": {
+    "72": "/icons/icon-72x72.png",
+    "96": "/icons/icon-96x96.png",
+    "128": "/icons/icon-128x128.png",
+    "144": "/icons/icon-144x144.png",
+    "152": "/icons/icon-152x152.png",
+    "196": "/icons/icon-192x192.png",
+    "384": "/icons/icon-384x384.png",
+    "512": "/icons/icon-512x512.png"
+  },
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "permissions": ["activeTab"],
+  "host_permissions": ["https://sokker.org/*"],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Sokker JSON Exporter"
+  }
+}

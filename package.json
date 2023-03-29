@@ -1,0 +1,37 @@
+{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.11",
+    "@mui/lab": "^5.0.0-alpha.123",
+    "@mui/material": "^5.11.12",
+    "@types/chrome": "^0.0.223",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "axios": "^1.3.4",
+    "babel-plugin-formatjs": "^10.4.0",
+    "eslint": "^8.36.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-intl": "^6.3.2",
+    "terser": "^5.16.6",
+    "typescript": "^4.9.3",
+    "vite": "^4.2.0-beta.1",
+    "vite-plugin-compression": "^0.5.1",
+    "workbox-build": "^6.5.4",
+    "workbox-window": "^6.5.4"
+  }
+}
