@@ -30,3 +30,38 @@ Ask a question or give us a shout out:
 
 - 💌 sokkercuba@gmail.com
 - 🐣 <https://www.sokkercuba.com/about>
+
+## Getting started for installing the zip code
+
+1. Unzip the project.
+
+2. Access the project directory.
+
+   ```bash
+   cd Sokker-Json-Data-Exporter-main
+   ```
+
+3. Install dependencies.
+
+   ```bash
+   npm install
+   ```
+
+4. Start dev server with hot reload at <http://localhost:5173>.
+
+   ```bash
+   npm run dev
+   ```
+
+## Recommended VS Code extensions
+
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+## Other commands
+
+### Build commands
+
+```bash
+npm run build
+```
