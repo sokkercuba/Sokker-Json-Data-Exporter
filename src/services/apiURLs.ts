@@ -1,6 +1,6 @@
 export const USER_DATA = `/current`;
 
-export const JUNIORS_REPORT = `/junior/report`;
+export const JUNIORS_REPORT = `/junior`;
 
 export const CURRENT_WEEK_TRAINING = `/training`;
 export const TRAINING_SUMMARY = `/training/summary`;
