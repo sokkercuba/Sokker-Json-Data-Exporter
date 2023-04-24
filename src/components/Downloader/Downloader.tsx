@@ -152,7 +152,12 @@ export function Downloader({
         const { status, data } = response || null
 
         if (status === 200 && data && !data?.error) {
-          setData(data)
+          if (query.includes('report')) {
+            setData({ ...data, id: Number(query.split('/')[2]) })
+          } else {
+            setData(data)
+          }
+
           setSuccess(true)
         }
         if (data?.error) {
