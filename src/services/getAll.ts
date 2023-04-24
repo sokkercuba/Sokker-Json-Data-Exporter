@@ -10,11 +10,23 @@ import {
 } from './apiURLs'
 import { apiClient } from './apiClient'
 
-const initialPromises = [
-  apiClient.get(USER_DATA),
-  apiClient.get(JUNIORS_REPORT),
-  apiClient.get(CURRENT_WEEK_TRAINING),
-  apiClient.get(TRAINING_SUMMARY)
+const getInitialPromises = () => [
+  apiClient
+    .get(USER_DATA)
+    .then((res) => res)
+    .catch((err) => ({ data: [], error: err })),
+  apiClient
+    .get(JUNIORS_REPORT)
+    .then((res) => res)
+    .catch((err) => ({ data: [], error: err })),
+  apiClient
+    .get(CURRENT_WEEK_TRAINING)
+    .then((res) => res)
+    .catch((err) => ({ data: [], error: err })),
+  apiClient
+    .get(TRAINING_SUMMARY)
+    .then((res) => res)
+    .catch((err) => ({ data: [], error: err }))
 ]
 
 export const getAll = async () => {
@@ -24,7 +36,7 @@ export const getAll = async () => {
       { data: juniors },
       { data: cweek },
       { data: tsummary }
-    ] = await Promise.all(initialPromises)
+    ] = await Promise.all(getInitialPromises())
 
     const teamId = user?.team?.id
 
