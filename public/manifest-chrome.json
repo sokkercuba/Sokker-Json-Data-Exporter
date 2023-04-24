@@ -1,5 +1,4 @@
 {
-  "author": "Ismail vega",
   "name": "Sokker JSON data exporter",
   "short_name": "Sokker data exporter",
   "description": "This extension helps sokker.org authenticated users to get JSON data so it can be used to improve the management of your team.",
@@ -19,13 +18,5 @@
   "action": {
     "default_popup": "index.html",
     "default_title": "Sokker JSON Exporter"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "sokkerjsondataexporter@1680212682903.com"
-    },
-    "safari": {
-      "strict_min_version": "14"
-    }
   }
 }

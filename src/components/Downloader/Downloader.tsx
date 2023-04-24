@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosError, AxiosResponse } from 'axios'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
@@ -131,7 +132,16 @@ export function Downloader({
 
     if (query === 'All') {
       const result = await getAll()
-      console.log('🚀 ~ result:', result)
+      if (!result) {
+        setSuccess(false)
+        handleAlertOpen()
+        setAlertSeverity('error')
+        setResponseText(parseApiErrors())
+      } else {
+        setData(result as any)
+        setSuccess(true)
+      }
+
       setLoading(false)
       return
     }
