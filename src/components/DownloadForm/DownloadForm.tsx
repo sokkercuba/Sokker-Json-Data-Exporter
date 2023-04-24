@@ -1,31 +1,32 @@
-import Box from "@mui/material/Box";
-import { Downloader } from "../Downloader";
-import { ChangeEvent, useState } from "react";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-import { validateInputValue } from "../../utils/validateInputValue";
+import Box from '@mui/material/Box'
+import { Downloader } from '../Downloader'
+import { ChangeEvent, useState } from 'react'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import PermIdentityIcon from '@mui/icons-material/PermIdentity'
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
+import { validateInputValue } from '../../utils/validateInputValue'
 
 interface DownloaderFormProps {
-  inputLabel: string;
-  downloadCb: (value: string) => string;
+  inputLabel: string
+  downloadCb: (value: string) => string
 }
 
 export const DownloadForm = ({
   inputLabel,
-  downloadCb,
+  downloadCb
 }: DownloaderFormProps) => {
-  const [value, setValue] = useState<string>("");
-  const [error, setFormError] = useState(false);
+  const [value, setValue] = useState<string>('')
+  const [error, setFormError] = useState(false)
 
   return (
     <Box
       component="form"
       autoComplete="off"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start'
       }}
     >
       <TextField
@@ -39,28 +40,34 @@ export const DownloadForm = ({
             ? `Enter ${inputLabel} ID`
             : `Please add a correct ${inputLabel} ID.`
         }
-        sx={{ minWidth: "248px", ml: "64px" }}
+        sx={{ minWidth: '248px', ml: '64px' }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <PermIdentityIcon
-                sx={{ color: "action.active", mr: 1, my: 0.5 }}
-              />
+              {inputLabel === 'team' ? (
+                <PeopleOutlineIcon
+                  sx={{ color: 'action.active', mr: 1, my: 0.5 }}
+                />
+              ) : (
+                <PermIdentityIcon
+                  sx={{ color: 'action.active', mr: 1, my: 0.5 }}
+                />
+              )}
             </InputAdornment>
-          ),
+          )
         }}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
-          if (error) setFormError(false);
-          setValue(event.target.value);
+          if (error) setFormError(false)
+          setValue(event.target.value)
         }}
       />
       <Downloader
         buttonText={`Download ${inputLabel} data`}
         onFormError={() => setFormError(true)}
         query={
-          value.trim() && validateInputValue(value) ? downloadCb(value) : ""
+          value.trim() && validateInputValue(value) ? downloadCb(value) : ''
         }
       />
     </Box>
-  );
-};
+  )
+}
