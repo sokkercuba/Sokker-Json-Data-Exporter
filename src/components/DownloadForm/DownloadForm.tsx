@@ -3,17 +3,16 @@ import { Downloader } from '../Downloader'
 import { ChangeEvent, useState } from 'react'
 import TextField from '@mui/material/TextField'
 import InputAdornment from '@mui/material/InputAdornment'
-import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
 import { validateInputValue } from '../../utils/validateInputValue'
 
 interface DownloaderFormProps {
-  inputLabel: string
+  buttonLabel: string
   downloadCb: (value: string) => string
 }
 
 export const DownloadForm = ({
-  inputLabel,
+  buttonLabel,
   downloadCb
 }: DownloaderFormProps) => {
   const [value, setValue] = useState<string>('')
@@ -35,24 +34,14 @@ export const DownloadForm = ({
         value={value}
         variant="standard"
         id="outlined-controlled"
-        label={
-          !error
-            ? `Enter ${inputLabel} ID`
-            : `Please add a correct ${inputLabel} ID.`
-        }
+        label={!error ? `Enter team ID` : `Please add a correct team ID.`}
         sx={{ minWidth: '248px', ml: '64px' }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              {inputLabel === 'team' ? (
-                <PeopleOutlineIcon
-                  sx={{ color: 'action.active', mr: 1, my: 0.5 }}
-                />
-              ) : (
-                <PermIdentityIcon
-                  sx={{ color: 'action.active', mr: 1, my: 0.5 }}
-                />
-              )}
+              <PeopleOutlineIcon
+                sx={{ color: 'action.active', mr: 1, my: 0.5 }}
+              />
             </InputAdornment>
           )
         }}
@@ -62,7 +51,8 @@ export const DownloadForm = ({
         }}
       />
       <Downloader
-        buttonText={`Download ${inputLabel} data`}
+        direct={buttonLabel === 'training'}
+        buttonText={`Download ${buttonLabel} data`}
         onFormError={() => setFormError(true)}
         query={
           value.trim() && validateInputValue(value) ? downloadCb(value) : ''

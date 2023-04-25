@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosError } from 'axios'
 import {
   USER_DATA,
   JUNIORS_REPORT,
   CURRENT_WEEK_TRAINING,
-  TRAINING_SUMMARY,
-  getPlayerFullReportURL,
-  getTeamPlayersURL
+  TRAINING_SUMMARY
 } from './apiURLs'
 import { apiClient } from './apiClient'
+import { getTrainingReport } from './getTrainingReport'
 
 const getInitialPromises = () => [
   apiClient
@@ -42,43 +39,17 @@ export const getAll = async () => {
 
     if (!teamId) return null
 
-    const pdata = await apiClient
-      .get(getTeamPlayersURL(teamId))
-      .then((response) => {
-        const { status, data } = response || null
+    const { players, training } = await getTrainingReport(teamId)
 
-        if (status === 200 && data && !data?.error) {
-          return data
-        }
-        if (data?.error) {
-          return null
-        }
-      })
-      .catch((error: AxiosError) => {
-        console.log('🚀 ~ error:', error)
-        return null
-      })
-
-    if (!pdata?.players) return null
-
-    const fullReportPromises = pdata.players.map((player: any) => {
-      return apiClient.get(getPlayerFullReportURL(player.id))
-    })
-
-    const tResponse = await Promise.all(fullReportPromises)
-
-    if (!tResponse) return null
+    if (!players || !training) return null
 
     return {
       user,
       juniors,
       cweek,
       tsummary,
-      players: pdata,
-      training: tResponse.map((t, i) => ({
-        ...t.data,
-        id: pdata.players[i].id
-      }))
+      players,
+      training
     }
   } catch (error) {
     console.error(error)

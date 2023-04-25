@@ -15,8 +15,10 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { getAll, apiClient, parseApiErrors } from '../../services'
 import { copyTextToClipboard } from '../../utils/copyTextToClipboard'
 import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
+import { getTrainingReport } from '../../services/getTrainingReport'
 
 interface DownloaderProps {
+  direct?: boolean
   query: string
   buttonText: string
   onFormError?: () => void
@@ -44,6 +46,7 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 })
 
 export function Downloader({
+  direct = false,
   query,
   buttonText,
   onFormError
@@ -146,38 +149,55 @@ export function Downloader({
       return
     }
 
-    await apiClient
-      .get(query)
-      .then((response) => {
-        const { status, data } = response || null
-
-        if (status === 200 && data && !data?.error) {
-          if (query.includes('report')) {
-            setData({ ...data, id: Number(query.split('/')[2]) })
-          } else {
-            setData(data)
-          }
-
-          setSuccess(true)
-        }
-        if (data?.error) {
-          setSuccess(false)
-          handleAlertOpen()
-          setAlertSeverity('error')
-          setResponseText(parseApiErrors(response.status.toString()))
-        }
-      })
-      .catch((error: AxiosError) => {
-        const { response, code } = error
-        const errorCode = response?.status ?? code
+    if (direct) {
+      const { training } = await getTrainingReport(query)
+      if (!training) {
         setSuccess(false)
         handleAlertOpen()
         setAlertSeverity('error')
-        setResponseText(parseApiErrors(errorCode?.toString() || ''))
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+        setResponseText(parseApiErrors())
+      } else {
+        setData(training as any)
+        setSuccess(true)
+      }
+
+      setLoading(false)
+      return
+    }
+
+    if (query)
+      await apiClient
+        .get(query)
+        .then((response) => {
+          const { status, data } = response || null
+
+          if (status === 200 && data && !data?.error) {
+            if (query.includes('report')) {
+              setData({ ...data, id: Number(query.split('/')[2]) })
+            } else {
+              setData(data)
+            }
+
+            setSuccess(true)
+          }
+          if (data?.error) {
+            setSuccess(false)
+            handleAlertOpen()
+            setAlertSeverity('error')
+            setResponseText(parseApiErrors(response.status.toString()))
+          }
+        })
+        .catch((error: AxiosError) => {
+          const { response, code } = error
+          const errorCode = response?.status ?? code
+          setSuccess(false)
+          handleAlertOpen()
+          setAlertSeverity('error')
+          setResponseText(parseApiErrors(errorCode?.toString() || ''))
+        })
+        .finally(() => {
+          setLoading(false)
+        })
   }
 
   const handleButtonClick = () => {

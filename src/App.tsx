@@ -8,8 +8,6 @@ import { styled } from '@mui/material/styles'
 import { Downloader, DownloadForm, Footer } from './components'
 import {
   CURRENT_WEEK_TRAINING,
-  getPlayerData,
-  getPlayerFullReportURL,
   getTeamPlayersURL,
   JUNIORS_REPORT,
   TRAINING_SUMMARY,
@@ -99,10 +97,7 @@ const App = () => {
       <TabPanel value={value} index={1}>
         <StackContainer>
           <Item>
-            <DownloadForm inputLabel="player" downloadCb={getPlayerData} />
-          </Item>
-          <Item>
-            <DownloadForm inputLabel="team" downloadCb={getTeamPlayersURL} />
+            <DownloadForm buttonLabel="team" downloadCb={getTeamPlayersURL} />
           </Item>
         </StackContainer>
       </TabPanel>
@@ -129,8 +124,8 @@ const App = () => {
           </Item>
           <Item>
             <DownloadForm
-              inputLabel="player"
-              downloadCb={getPlayerFullReportURL}
+              buttonLabel="training"
+              downloadCb={(teamId: string) => teamId}
             />
           </Item>
         </StackContainer>
