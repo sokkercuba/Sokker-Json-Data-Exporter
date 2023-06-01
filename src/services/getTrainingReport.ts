@@ -35,9 +35,14 @@ export const getTrainingReport = async (teamId: string) => {
 
   return {
     players,
-    training: tResponse.map((t, i) => ({
-      ...t.data,
-      id: players.players[i].id
-    }))
+    training: tResponse.map((t, i) => {
+      const { reports } = t.data
+      reports?.pop()
+
+      return {
+        reports,
+        id: players.players[i].id
+      }
+    })
   }
 }
