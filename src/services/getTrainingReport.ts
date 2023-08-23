@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosError } from 'axios'
 import { apiClient } from './apiClient'
-import { getPlayerFullReportURL, getTeamPlayersURL } from './apiURLs'
+import { USER_DATA, getPlayerFullReportURL, getTeamPlayersURL } from './apiURLs'
 
 const emptyResult = { players: null, training: null }
 
@@ -33,6 +33,11 @@ export const getTrainingReport = async (teamId: string) => {
 
   if (!tResponse) return emptyResult
 
+  const { today } = await apiClient
+    .get(USER_DATA)
+    .then((res) => res.data)
+    .catch((err) => ({ data: [], error: err }))
+
   return {
     players,
     training: tResponse.map((t, i) => {
@@ -40,7 +45,15 @@ export const getTrainingReport = async (teamId: string) => {
       reports?.pop()
 
       return {
-        reports,
+        reports: reports.map((report: any) => {
+          if (report.week === today.week) {
+            return {
+              ...report,
+              age: players.players[i].info.characteristics.age
+            }
+          }
+          return report
+        }),
         id: players.players[i].id
       }
     })
