@@ -133,6 +133,7 @@ export function Downloader({
 
     if (query === "All") {
       const result: any = await getAll();
+      console.log("result: ", result);
       if (!result || result?.code !== 200) {
         setSuccess(false);
         handleAlertOpen();

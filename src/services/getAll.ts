@@ -39,7 +39,7 @@ export const getAll = async () => {
     const plus = user?.plus;
 
     if (!teamId) return null;
-    if (!plus) return { code: 401 };
+    if (!plus) return { code: "401" };
 
     const { players, training } = await getTrainingReport(teamId);
 
