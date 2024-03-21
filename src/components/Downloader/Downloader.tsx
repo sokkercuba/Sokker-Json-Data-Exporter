@@ -12,8 +12,10 @@ import CheckIcon from "@mui/icons-material/Check";
 import CircularProgress from "@mui/material/CircularProgress";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { CURRENT_WEEK_TRAINING } from "../../services/apiURLs";
 import { getAll, apiClient, parseApiErrors } from "../../services";
 import { copyTextToClipboard } from "../../utils/copyTextToClipboard";
+import { cweekToTrainingData } from "../../utils/cweekToTrainingData";
 import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
 
 interface DownloaderProps {
@@ -157,6 +159,14 @@ export function Downloader({
           if (status === 200 && data && !data?.error) {
             if (query.includes("report")) {
               setData({ ...data, id: Number(query.split("/")[2]) });
+            } else if (query === CURRENT_WEEK_TRAINING) {
+              if (!data?.players) {
+                setSuccess(false);
+                handleAlertOpen();
+                setAlertSeverity("error");
+                setResponseText(parseApiErrors("404"));
+              }
+              setData(cweekToTrainingData(data?.players));
             } else {
               setData(data);
             }

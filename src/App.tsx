@@ -112,7 +112,7 @@ const App = () => {
         <StackContainer>
           <Item>
             <Downloader
-              buttonText="Download current week"
+              buttonText="Download training data"
               query={CURRENT_WEEK_TRAINING}
             />
           </Item>
