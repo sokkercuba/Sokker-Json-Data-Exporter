@@ -84,7 +84,7 @@ const App = () => {
           <Tab label="Players" {...a11yProps(1)} />
           <Tab label="Juniors" {...a11yProps(2)} />
           <Tab label="Training" {...a11yProps(3)} />
-          <Tab label="All(plus)" {...a11yProps(4)} />
+          <Tab label="All" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -112,7 +112,7 @@ const App = () => {
         <StackContainer>
           <Item>
             <Downloader
-              buttonText="Download training data"
+              buttonText="Download current week"
               query={CURRENT_WEEK_TRAINING}
             />
           </Item>
