@@ -13,7 +13,7 @@
     "284": "/icons/icon-284x284.png",
     "512": "/icons/icon-512x512.png"
   },
-  "version": "0.3.2",
+  "version": "0.4.0",
   "manifest_version": 3,
   "host_permissions": ["https://sokker.org/*"],
   "action": {
