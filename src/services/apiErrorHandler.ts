@@ -1,7 +1,7 @@
 export const parseApiErrors = (code?: string) => {
   switch (code) {
     case "401":
-      return "Your request was not authorized. Please log in to your sokker.org account.";
+      return "Your request was not authorized. Please log in to your sokker.org account or check if you need plus for this request.";
     case "404":
       return "The requested data was not found.";
     case "400":

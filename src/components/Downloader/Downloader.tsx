@@ -1,226 +1,208 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxiosError, AxiosResponse } from 'axios'
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
-import Box from '@mui/material/Box'
-import Fab from '@mui/material/Fab'
-import Button from '@mui/material/Button'
-import Tooltip from '@mui/material/Tooltip'
-import { green } from '@mui/material/colors'
-import Snackbar from '@mui/material/Snackbar'
-import IconButton from '@mui/material/IconButton'
-import CheckIcon from '@mui/icons-material/Check'
-import CircularProgress from '@mui/material/CircularProgress'
-import DownloadingIcon from '@mui/icons-material/Downloading'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import { getAll, apiClient, parseApiErrors } from '../../services'
-import { copyTextToClipboard } from '../../utils/copyTextToClipboard'
-import MuiAlert, { AlertColor, AlertProps } from '@mui/material/Alert'
-import { getTrainingReport } from '../../services/getTrainingReport'
+import { AxiosError, AxiosResponse } from "axios";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import { green } from "@mui/material/colors";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CheckIcon from "@mui/icons-material/Check";
+import CircularProgress from "@mui/material/CircularProgress";
+import DownloadingIcon from "@mui/icons-material/Downloading";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { getAll, apiClient, parseApiErrors } from "../../services";
+import { copyTextToClipboard } from "../../utils/copyTextToClipboard";
+import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
 
 interface DownloaderProps {
-  direct?: boolean
-  query: string
-  buttonText: string
-  onFormError?: () => void
+  direct?: boolean;
+  query: string;
+  buttonText: string;
+  onFormError?: () => void;
 }
 
 interface CopyMessages {
-  none: string
-  error: string
-  success: string
-  copying: string
+  none: string;
+  error: string;
+  success: string;
+  copying: string;
 }
 
 const copyMessages: CopyMessages = {
-  none: '',
-  copying: '',
-  error: 'Copy failed',
-  success: 'Data copied'
-}
+  none: "",
+  copying: "",
+  error: "Copy failed",
+  success: "Data copied",
+};
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref
 ) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 export function Downloader({
-  direct = false,
   query,
   buttonText,
-  onFormError
+  onFormError,
 }: DownloaderProps) {
-  const timer = useRef<number>()
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [isCopied, setIsCopied] = useState(false)
-  const [alertOpen, setAlertOpen] = useState(false)
-  const [data, setData] = useState<AxiosResponse>()
-  const [responseText, setResponseText] = useState('')
-  const [tooltipOpen, setTooltipOpen] = useState(false)
-  const [alertSeverity, setAlertSeverity] = useState<AlertColor>('error')
-  const [copyStatus, setCopyStatus] = useState<keyof CopyMessages>('none')
+  const timer = useRef<number>();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [data, setData] = useState<AxiosResponse>();
+  const [responseText, setResponseText] = useState("");
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [alertSeverity, setAlertSeverity] = useState<AlertColor>("error");
+  const [copyStatus, setCopyStatus] = useState<keyof CopyMessages>("none");
 
-  const stringifiedData = useMemo(() => JSON.stringify(data), [data])
-  const copyToClipboardText = 'Copy to clipboard'
+  const stringifiedData = useMemo(() => JSON.stringify(data), [data]);
+  const copyToClipboardText = "Copy to clipboard";
 
   const buttonSx = {
     ...(success && {
       bgcolor: green[500],
-      '&:hover': {
-        bgcolor: green[700]
-      }
-    })
-  }
+      "&:hover": {
+        bgcolor: green[700],
+      },
+    }),
+  };
 
   const handleTooltipClose = () => {
-    setTooltipOpen(false)
-    setIsCopied(false)
-  }
+    setTooltipOpen(false);
+    setIsCopied(false);
+  };
 
   const handleTooltipOpen = () => {
-    if (copyStatus !== 'copying') {
-      setTooltipOpen(true)
+    if (copyStatus !== "copying") {
+      setTooltipOpen(true);
     }
-  }
+  };
 
   const handleAlertOpen = () => {
-    setAlertOpen(true)
-  }
+    setAlertOpen(true);
+  };
 
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
   ) => {
-    if (reason === 'clickaway') {
-      return
+    if (reason === "clickaway") {
+      return;
     }
 
-    setAlertOpen(false)
-  }
+    setAlertOpen(false);
+  };
 
   const copyToClipboard = () => {
-    handleTooltipClose()
-    setCopyStatus('copying')
+    handleTooltipClose();
+    setCopyStatus("copying");
 
     copyTextToClipboard(stringifiedData)
       .then(() => {
         timer.current = window.setTimeout(() => {
-          setIsCopied(true)
-          setCopyStatus('success')
-          handleTooltipOpen()
-        }, 1500)
+          setIsCopied(true);
+          setCopyStatus("success");
+          handleTooltipOpen();
+        }, 1500);
       })
       .catch((error) => {
-        const { response, code } = error
-        const errorCode = response?.status ?? code
-        setIsCopied(true)
-        setCopyStatus('error')
-        handleTooltipOpen()
-        handleAlertOpen()
-        setAlertSeverity('error')
-        setResponseText(parseApiErrors(errorCode?.toString() || ''))
-      })
-  }
+        const { response, code } = error;
+        const errorCode = response?.status ?? code;
+        setIsCopied(true);
+        setCopyStatus("error");
+        handleTooltipOpen();
+        handleAlertOpen();
+        setAlertSeverity("error");
+        setResponseText(parseApiErrors(errorCode?.toString() || ""));
+      });
+  };
 
   const getApiData = async () => {
     if (!query && onFormError) {
-      onFormError()
-      return
+      onFormError();
+      return;
     }
 
-    setLoading(true)
-    setSuccess(false)
+    setLoading(true);
+    setSuccess(false);
 
-    if (query === 'All') {
-      const result = await getAll()
-      if (!result) {
-        setSuccess(false)
-        handleAlertOpen()
-        setAlertSeverity('error')
-        setResponseText(parseApiErrors())
+    if (query === "All") {
+      const result: any = await getAll();
+      if (!result || result?.code !== 200) {
+        setSuccess(false);
+        handleAlertOpen();
+        setAlertSeverity("error");
+        setResponseText(parseApiErrors(result?.code || ""));
       } else {
-        setData(result as any)
-        setSuccess(true)
+        setData(result as any);
+        setSuccess(true);
       }
 
-      setLoading(false)
-      return
-    }
-
-    if (direct) {
-      const { training } = await getTrainingReport(query)
-      if (!training) {
-        setSuccess(false)
-        handleAlertOpen()
-        setAlertSeverity('error')
-        setResponseText(parseApiErrors())
-      } else {
-        setData(training as any)
-        setSuccess(true)
-      }
-
-      setLoading(false)
-      return
+      setLoading(false);
+      return;
     }
 
     if (query)
       await apiClient
         .get(query)
         .then((response) => {
-          const { status, data } = response || null
+          const { status, data } = response || null;
 
           if (status === 200 && data && !data?.error) {
-            if (query.includes('report')) {
-              setData({ ...data, id: Number(query.split('/')[2]) })
+            if (query.includes("report")) {
+              setData({ ...data, id: Number(query.split("/")[2]) });
             } else {
-              setData(data)
+              setData(data);
             }
 
-            setSuccess(true)
+            setSuccess(true);
           }
           if (data?.error) {
-            setSuccess(false)
-            handleAlertOpen()
-            setAlertSeverity('error')
-            setResponseText(parseApiErrors(response.status.toString()))
+            setSuccess(false);
+            handleAlertOpen();
+            setAlertSeverity("error");
+            setResponseText(parseApiErrors(response.status.toString()));
           }
         })
         .catch((error: AxiosError) => {
-          const { response, code } = error
-          const errorCode = response?.status ?? code
-          setSuccess(false)
-          handleAlertOpen()
-          setAlertSeverity('error')
-          setResponseText(parseApiErrors(errorCode?.toString() || ''))
+          const { response, code } = error;
+          const errorCode = response?.status ?? code;
+          setSuccess(false);
+          handleAlertOpen();
+          setAlertSeverity("error");
+          setResponseText(parseApiErrors(errorCode?.toString() || ""));
         })
         .finally(() => {
-          setLoading(false)
-        })
-  }
+          setLoading(false);
+        });
+  };
 
   const handleButtonClick = () => {
     if (!loading) {
-      getApiData()
+      getApiData();
     }
-  }
+  };
 
   useEffect(() => {
     return () => {
-      clearTimeout(timer.current)
-    }
-  }, [])
+      clearTimeout(timer.current);
+    };
+  }, []);
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Box sx={{ m: 1, position: 'relative' }}>
+      <Box sx={{ m: 1, position: "relative" }}>
         <Fab
           size="small"
           sx={buttonSx}
@@ -242,18 +224,18 @@ export function Downloader({
               left: -6,
               zIndex: 1,
               color: green[500],
-              position: 'absolute'
+              position: "absolute",
             }}
           />
         )}
       </Box>
-      <Box sx={{ m: 1, position: 'relative' }}>
+      <Box sx={{ m: 1, position: "relative" }}>
         <Button
           size="small"
           disabled={loading}
           variant="contained"
           onClick={handleButtonClick}
-          sx={{ ...buttonSx, minWidth: '248px' }}
+          sx={{ ...buttonSx, minWidth: "248px" }}
         >
           {buttonText}
         </Button>
@@ -279,11 +261,11 @@ export function Downloader({
         <Alert
           onClose={handleAlertClose}
           severity={alertSeverity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {responseText}
         </Alert>
       </Snackbar>
     </Box>
-  )
+  );
 }
